@@ -172,6 +172,10 @@ h1 h2 p {
   background-color: #2980b9;
 }
 
-@media screen and (max-width: 768px) {
-  
+@media screen and (max-width: 642px) {
+  .main-container {
+    flex-direction: column;
+    max-width: 250px;
+
+  }
 }
