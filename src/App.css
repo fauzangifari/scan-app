@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@500&display=swap');
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  background-image: url(./assets/img/background.jpg);
+  background-size: cover;
+  background-position: center;
+
+}
+
+.main-container {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logo {
+  margin: 0 auto 1rem;
+  object-fit: cover;
+  height: 4rem;
+  width: 4rem;
+  display: flex;
+}
+
+.button {
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: #2980b9;
+}
+
+.footer-text {
+  text-align: center;
+  color: #ddd;
+  font-size: 0.75rem;
+}
+
+h1 h2 p {
+  font-family: 'Poppins', sans-serif;
+}
+
+.scan {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+}
+
+
+.scan__header {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scan__header__title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.scan__header__close {
+  cursor: pointer;
+}
+
+.scan__content {
+  padding: 20px;
+}
+
+.scan__content__warning {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.scan__content__qr-reader {
+  margin-bottom: 20px;
+}
+
+.scan__content__uid {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.scan__content__redeemed-status {
+  margin-bottom: 10px;
+}
+
+.scan__content__toggle-scanner {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.scan__success-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scan__success-popup__content {
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.scan__success-popup__content__title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.scan__success-popup__content__uid {
+  margin-bottom: 10px;
+}
+
+.scan__success-popup__content__redeemed-status {
+  margin-bottom: 10px;
+}
+
+.scan__success-popup__content__close {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.scan__success-popup__content__close:hover {
+  background-color: #2980b9;
+}
+
+@media screen and (max-width: 768px) {
+  
+}
