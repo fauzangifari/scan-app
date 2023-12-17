@@ -14,8 +14,35 @@ const Scan = ({ onClose }) => {
 
     const onScanSuccess = (qrCodeMessage) => {
       try {
-        const { uid, redeemedStatus } = JSON.parse(qrCodeMessage);
-        setUid(uid);
+        setUid(qrCodeMessage);
+        // kirim request ke backend untuk mendapatkan data tiket
+        // response dari backend:
+
+        // ---- Berhasil ----
+        // EndPoint: GET:http://localhost:8000/api/ticket/{uid}
+        // Response: {
+        //  status: "200",
+        //  uid: "base64 encoded uid",
+        //  code: "dari server",
+        //  valid: true,
+        // }
+
+        // ---- Gagal (sudah di redeem) ----
+        // EndPoint: GET:http://localhost:8000/api/ticket/{uid}
+        // Response: {
+        //  status: "200",
+        //  uid: "base64 encoded uid",
+        //  code: "dari server",
+        //  valid: false,
+        // }
+
+        // ---- Gagal (tidak ditemukan) ----
+        // EndPoint: GET:http://localhost:8000/api/ticket/{uid}
+        // Response: {
+        //  status: "404",
+        //  uid: "base64 encoded uid",
+        // }
+
         setRedeemedStatus(redeemedStatus);
         setWarning("");
         setShowSuccessPopup(true);
