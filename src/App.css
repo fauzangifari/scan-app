@@ -172,6 +172,20 @@ h1 h2 p {
   background-color: #2980b9;
 }
 
+.scan__success-popup__content__button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.scan__success-popup__content__button:hover {
+  background-color: #2980b9;
+}
+
 @media screen and (max-width: 642px) {
   .main-container {
     flex-direction: column;
