@@ -6,26 +6,40 @@ import axios from "axios";
 const Scan = ({ onClose }) => {
   const [uid, setUid] = useState("");
   const [redeemedStatus, setRedeemedStatus] = useState("");
-  const [redeem, setRedeem] = useState(false);
+  const [redeem, setRedeem] = useState(true);
   const [warning, setWarning] = useState("");
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [ticketNotFound, setTicketNotFound] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const onScanSuccess = (qrCodeMessage) => {
+  const onScanSuccess = async (qrCodeMessage) => {
     setWarning("");
     const decode = atob(qrCodeMessage);
     setUid(decode);
 
-    axios
-      .get(`http://localhost:5000/api/uid/${decode}`)
-      .then((res) => {
-        setRedeem(res.data.redeemed ? true : false);
-        setShowSuccessPopup(true);
-      })
-      .catch((err) => {
-        setRedeemedStatus("Not Redeemed");
-        setShowSuccessPopup(true);
-      });
+    try {
+      const res = await axios.get(`http://localhost:8080/api/uid/${decode}`);
+      console.log(res.data.valid);
+
+      if (!res.data.valid) {
+        setRedeem(false);
+        setRedeemedStatus("Sudah di-redeem");
+        setSuccessMessage("Tiket sudah di-redeem sebelumnya.");
+      } else {
+        setRedeem(true);
+        setRedeemedStatus("Belum di-redeem");
+        setSuccessMessage("Silahkan di-redeem");
+      }
+
+      setShowSuccessPopup(true);
+      setTicketNotFound(false);
+    } catch (err) {
+      console.log(`Error from server: ${err}`);
+      setRedeemedStatus("Not Redeemed");
+      setShowSuccessPopup(true);
+      setTicketNotFound(true);
+    }
   };
 
   useEffect(() => {
@@ -40,11 +54,7 @@ const Scan = ({ onClose }) => {
       qrCodeScanner.render(onScanSuccess);
     }
 
-    return () => {
-      if (qrCodeScanner) {
-        qrCodeScanner.clear();
-      }
-    };
+    return () => qrCodeScanner?.clear();
   }, [isScannerActive]);
 
   const toggleScanner = () => {
@@ -53,24 +63,31 @@ const Scan = ({ onClose }) => {
 
   const closeSuccessPopup = () => {
     setShowSuccessPopup(false);
+    setTicketNotFound(false);
   };
 
-  const redeemHandler = () => {
-    axios
-      .post(`http://localhost:5000/api/redeem`, { uid: uid })
-      .then((res) => {
-        if (res.data.redeemed) {
-          setRedeem(true);
-          setRedeemedStatus("Silahkan di redeem");
-        } else {
+  const redeemHandler = async () => {
+    try {
+      if (redeem) {
+        const res = await axios.post(`http://localhost:8080/api/redeem`, { id: uid });
+
+        if (res.data) {
           setRedeem(false);
-          setRedeemedStatus("Sudah di redeem");
+          setSuccessMessage("Berhasil di redeem");
+          setRedeemedStatus(
+            res.data.redeemed ? "Silahkan di redeem" : "Sudah di redeem"
+          );
+          setShowSuccessPopup(true);
+        } else {
+          setSuccessMessage("Gagal di redeem. Tiket sudah di-redeem sebelumnya.");
         }
-        setShowSuccessPopup(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      } else {
+        setSuccessMessage("Tiket sudah di-redeem sebelumnya.");
+      }
+    } catch (err) {
+      console.log(err);
+      setWarning("Gagal di redeem. Silahkan coba lagi.");
+    }
   };
 
   return (
@@ -85,29 +102,16 @@ const Scan = ({ onClose }) => {
         <div className="scan__content__warning">{warning}</div>
         <div className="scan__content__qr-reader" id="qr-reader"></div>
         {showSuccessPopup && (
-          <>
-            <div className="scan__content__uid">{uid}</div>
-            <div className="scan__content__redeemed-status">
-              {redeemedStatus}
-            </div>
-          </>
-        )}
-        <div className="scan__content__toggle-scanner" onClick={toggleScanner}>
-          {isScannerActive ? "Stop" : "Start"} Scanner
-        </div>
-      </div>
-      {showSuccessPopup && (
-        <div className="scan__success-popup">
-          {redeem
-            ? true(
+          <div className="scan__success-popup">
+            <div className="scan__success-popup__content">
+              {ticketNotFound ? (
                 <div className="scan__success-popup__content__title">
-                  {redeemedStatus}
+                  Ticket tidak ditemukan
                 </div>
-              )
-            : false(
-                <div className="scan__success-popup__content">
+              ) : (
+                <>
                   <div className="scan__success-popup__content__title">
-                    {showSuccessPopup}
+                    {successMessage || showSuccessPopup}
                   </div>
                   <div className="scan__success-popup__content__uid">
                     UID: {uid}
@@ -121,16 +125,22 @@ const Scan = ({ onClose }) => {
                   >
                     Redeem
                   </button>
-                  <div
-                    className="scan__success-popup__content__close"
-                    onClick={closeSuccessPopup}
-                  >
-                    <UisMultiply size="25" />
-                  </div>
-                </div>
+                </>
               )}
+              <div
+                className="scan__success-popup__content__close"
+                onClick={closeSuccessPopup}
+              >
+                <UisMultiply size="25" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="scan__content__toggle-scanner" onClick={toggleScanner}>
+          {isScannerActive ? "Stop" : "Start"} Scanner
         </div>
-      )}
+      </div>
     </div>
   );
 };
